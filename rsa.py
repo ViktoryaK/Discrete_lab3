@@ -2,9 +2,9 @@ import random
 
 
 def div_to(N):
-    k='90'
+    k = '90'
     while int(k+'90') < N:
-        k+='90'
+        k += '90'
     return k.count('90')*2
 
 def prime_nums_generation():

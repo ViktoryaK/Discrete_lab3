@@ -45,9 +45,12 @@ class Client:
             message = input()
             username, messg = message.split('::')
             self.s.send(username.encode())
-            keys = self.s.recv(1024).decode()
+            N = self.s.recv(1024).decode()
+            e = self.s.recv(1024).decode()
+            number = rsa.div_to(N)
             mess = rsa.message_to_numberblocks(message, number)
             c = rsa.encode(mess, e, N, number)
+            self.s.send(c.encode())
 
 if __name__ == "__main__":
     cl = Client("127.0.0.1", 9001, "b_g")

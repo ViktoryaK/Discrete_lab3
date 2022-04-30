@@ -28,22 +28,19 @@ class Server:
 
     def broadcast(self, msg: str):
         for client in self.clients:
-            # lenn = rsa.div_to()
-            # msg = rsa.message_to_numberblocks(msg, )
-            # mess = rsa.encode(msg)
-            # encrypt the message
-
-            # ...
-
             client.send(msg.encode())
 
     def handle_client(self, c: socket, addr): 
         while True:
             username = c.recv(1024).decode()
-            public_keys = c.send()
             for client in self.clients:
                 if client.username == username:
-                    c.send(client.keys)
+                    N = client.keys['p'], client.keys['q']
+                    c.send(N).encode()
+                    c.send(client.keys['e']).encode()
+            messg = c.recv(1024).decode()
+            for client in self.clients:
+                if client.username == username:
                     client.send(messg)
             # for client in self.clients:
             #     if client != c:
