@@ -2,6 +2,7 @@ import random
 
 
 def div_to(N):
+    N = int(N)
     k = '90'
     while int(k+'90') < N:
         k += '90'
@@ -68,6 +69,8 @@ def alphabet_to_numbers():
 
 def encode(message, e, N, lenn):
     result = []
+    e = int(e)
+    N = int(N)
     for base in message:
         c = pow(int(base), e, N)
         if len(str(c)) < lenn:
@@ -78,6 +81,7 @@ def encode(message, e, N, lenn):
 
 def decode(c, N, d, lenn):
     result = []
+    N = int(N)
     for block in c:
         m = pow(int(block), d, N)
         if len(str(m)) < lenn:

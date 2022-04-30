@@ -1,6 +1,9 @@
 import socket
 import threading
 import rsa
+import argparse
+from hashlib import sha256
+from secrets import compare_digest
 
 class Client:
     def __init__(self, server_ip: str, port: int, username: str) -> None:
@@ -16,15 +19,18 @@ class Client:
         except Exception as e:
             print("[client]: could not connect to server: ", e)
             return
-
         self.s.send(self.username.encode())
+        print(self.username)
         p, q = rsa.generate_p_q(rsa.primes)
         e = rsa.encryption_exponent(p, q)
         d = rsa.decryption_exponent(p, q, e)
+        N = p*q
         self.keys['e'] = e
         self.keys['p'] = p
         self.keys['q'] = q
         self.keys['d'] = d
+        self.s.send(str(N).encode())
+        self.s.send(str(e).encode())
         message_handler = threading.Thread(target=self.read_handler, args=())
         message_handler.start()
         input_handler = threading.Thread(target=self.write_handler, args=())
@@ -53,5 +59,8 @@ class Client:
             self.s.send(c.encode())
 
 if __name__ == "__main__":
-    cl = Client("127.0.0.1", 9001, "b_g")
+    parser = argparse.ArgumentParser()
+    parser.add_argument('username')
+    args = parser.parse_args()
+    cl = Client("127.0.0.1", 9001, args.username)
     cl.init_connection()
