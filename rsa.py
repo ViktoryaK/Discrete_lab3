@@ -1,5 +1,12 @@
 import random
 
+from hashlib import sha256
+from secrets import compare_digest
+def hashing(message):
+    sha256_digest_1 = sha256(message)
+    hexdigest_1 = sha256_digest_1.hexdigest()
+    return hexdigest_1
+
 
 def div_to(N):
     N = int(N)
@@ -130,3 +137,4 @@ primes = prime_nums_generation()
 # print(decoded)
 alphabet = alphabet_to_numbers()
 # print(numberblocks_to_message(decoded, alphabet, number))
+# print(hashing('hi'.encode()))

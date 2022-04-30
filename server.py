@@ -1,7 +1,7 @@
 import socket
 import threading
 import rsa
-
+import time
 
 class Server:
 
@@ -10,7 +10,6 @@ class Server:
         self.port = port
         self.clients = []
         self.username_lookup = {}
-        self.keys = {}
         self.s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
     def start(self):
@@ -19,39 +18,36 @@ class Server:
         while True:
             c, addr = self.s.accept()
             username = c.recv(1024).decode()
+            time.sleep(0.01)
             print(f"{username} tries to connect")
             self.broadcast(f'new person has joined: {username}')
-            N = c.recv(1024).decode()
-            e = c.recv(1024).decode()
-            self.keys[username] = [N, e]
             self.username_lookup[c] = username
             self.clients.append(c)
             threading.Thread(target=self.handle_client, args=(c, addr,)).start()
 
     def broadcast(self, msg: str):
-        for username in self.keys:
-            N = self.keys[username][0]
-            e = self.keys[username][1]
+        for client in self.username_lookup:
+            with open('public_keys.txt', 'r') as f:
+                for line in f:
+                    line = line.split(', ')
+                    if line[0] == self.username_lookup[client]:
+                        N = line[1]
+                        e = line[2]
             number = rsa.div_to(N)
             mess = rsa.message_to_numberblocks(msg, number)
             c = rsa.encode(mess, e, N, number)
-            for client in self.clients:
-                if client.username == username:
-                    client.send(c.encode())
+            for client in self.username_lookup:
+                if self.username_lookup[client] == self.username_lookup[client]:
+                    client.send(c)
 
     def handle_client(self, c: socket, addr):
         while True:
-            username = c.recv(1024).decode()
-            for key in self.username_lookup:
-                if self.username_lookup[key] == username:
-                    N = key.keys['p'] * key.keys['q']
-                    c.send(str(N)).encode()
-                    c.send(str(key.keys['e'])).encode()
-            messg = c.recv(1024).decode()
-            for client in self.clients:
-                if client.username == username:
+            receive = c.recv(1024).decode()
+            username = receive.split('|')[0]
+            messg = receive.split('|')[1:]
+            for client in self.username_lookup:
+                if self.username_lookup[client] == username:
                     client.send(messg)
-
 
 if __name__ == "__main__":
     s = Server(9001)
