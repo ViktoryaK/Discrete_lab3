@@ -37,6 +37,11 @@ class Client:
 
     def read_handler(self): 
         while True:
+            """
+            line 40, in read_handler
+    message = self.s.recv(1024).decode()
+UnicodeDecodeError: 'utf-8' codec can't decode byte 0xf6 in position 14: invalid start byte
+"""
             message = self.s.recv(1024).decode()
             number = rsa.div_to(self.N)
             decoded = rsa.decode(message, self.N, self.d, number)
@@ -58,6 +63,7 @@ class Client:
             number = rsa.div_to(N)
             mess = rsa.message_to_numberblocks(messag, number)
             c = rsa.encode(mess, e, N, number)
+            c = [str(i) for i in c]
             result = username + "|" + "|".join(c)
             self.s.send(result.encode())
 

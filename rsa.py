@@ -2,6 +2,7 @@ import random
 
 from hashlib import sha256
 from secrets import compare_digest
+
 def hashing(message):
     sha256_digest_1 = sha256(message)
     hexdigest_1 = sha256_digest_1.hexdigest()
@@ -83,7 +84,8 @@ def encode(message, e, N, lenn):
         if len(str(c)) < lenn:
             add = lenn - len(str(c))
             c = "0"*add + str(c)
-        result.append(str(c))
+            c = int(c)
+        result.append(c)
     return result
 
 def decode(c, N, d, lenn):
@@ -115,24 +117,24 @@ def numberblocks_to_message(num_message, diction, lenn):
 
 primes = prime_nums_generation()
 # p, q = generate_p_q(primes)
-# p, q = 17, 11
+p, q = 17, 11
 # print(p, q)
-# e = encryption_exponent(p, q)
+e = encryption_exponent(p, q)
 # print(e)
-# N = p*q
+N = p*q
 # print(N)
-
+number = div_to(N)
 # print(number)
-# message = 'Youre freaking right'
-# ulas = ['2015', '1114', '0003']
+message = 'hi'
+
 # print(ulas)
-# d = decryption_exponent(p, q, e)
+d = decryption_exponent(p, q, e)
 # print(d)
 # print(alphabet_to_numbers())
-# mess = message_to_numberblocks(message, number)
+mess = message_to_numberblocks(message, number)
 # print(mess)
-# c = encode(mess, e, N, number)
-# print(c)
+c = encode(mess, e, N, number)
+print(c)
 # decoded = decode(c, N, d, number)
 # print(decoded)
 alphabet = alphabet_to_numbers()

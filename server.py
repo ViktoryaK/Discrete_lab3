@@ -40,7 +40,10 @@ class Server:
             c = rsa.encode(mess, e, N, number)
             for client in self.username_lookup:
                 if self.username_lookup[client] == self.username_lookup[client]:
-                    client.send(c)
+                    mess = b""
+                    for number in c:
+                        mess += number.to_bytes(8, "big")
+                    client.send(mess)
 
     def handle_client(self, c: socket, addr):
         while True:
@@ -49,7 +52,7 @@ class Server:
             messg = receive.split('|')[1:]
             for client in self.username_lookup:
                 if self.username_lookup[client] == username:
-                    client.send(messg)
+                    client.send("".join(messg).encode())
 
 if __name__ == "__main__":
     s = Server(9001)
