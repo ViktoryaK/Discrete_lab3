@@ -1,7 +1,6 @@
 import random
 
 from hashlib import sha256
-from secrets import compare_digest
 
 def hashing(message):
     sha256_digest_1 = sha256(message)
@@ -68,23 +67,22 @@ def message_to_numberblocks(message, lenn):
     return result
 
 
-def alphabet_to_numbers():
-    dict = {chr(i): str(number) for number, i in enumerate(range(32, 123))}
-    for value in dict:
-        if len(dict[value]) == 1:
-            dict[value] = '0' + dict[value]
-    return dict
+# def alphabet_to_numbers():
+#     dict = {chr(i): str(number) for number, i in enumerate(range(32, 123))}
+#     for value in dict:
+#         if len(dict[value]) == 1:
+#             dict[value] = '0' + dict[value]
+#     return dict
 
 def encode(message, e, N, lenn):
     result = []
     e = int(e)
     N = int(N)
     for base in message:
-        c = pow(int(base), e, N)
-        if len(str(c)) < lenn:
-            add = lenn - len(str(c))
-            c = "0"*add + str(c)
-            c = int(c)
+        c = pow(ord(base), e, N)
+        # if len(str(c)) < lenn:
+        #     add = lenn - len(str(c))
+        #     c = "0"*add + str(c)
         result.append(c)
     return result
 
@@ -93,11 +91,21 @@ def decode(c, N, d, lenn):
     N = int(N)
     for block in c:
         m = pow(int(block), d, N)
-        if len(str(m)) < lenn:
-            add = lenn - len(str(m))
-            m = "0"*add + str(m)
-        result.append(str(m))
-    return result
+        # if len(str(m)) < lenn:
+        #     add = lenn - len(str(m))
+        #     m = "0"*add + str(m)
+        result.append(chr(m))
+    return "".join(result)
+
+def decode_message(message, N, d):
+    lst = []
+    for i in range(0, len(message), 8):
+        a = int.from_bytes(message[i: i + 8], 'big')
+        lst.append(a)
+    number = div_to(N)
+    decoded = decode(lst, N, d, number)
+    return decoded
+
 
 def numberblocks_to_message(num_message, diction, lenn):
     result = ""
@@ -117,26 +125,26 @@ def numberblocks_to_message(num_message, diction, lenn):
 
 primes = prime_nums_generation()
 # p, q = generate_p_q(primes)
-p, q = 17, 11
+# p, q = 17, 11
 # print(p, q)
-e = encryption_exponent(p, q)
+# e = encryption_exponent(p, q)
 # print(e)
-N = p*q
+# N = p*q
 # print(N)
-number = div_to(N)
-# print(number)
-message = 'hi'
 
+# print(number)
+# message = 'Youre freaking right'
+# ulas = ['2015', '1114', '0003']
 # print(ulas)
-d = decryption_exponent(p, q, e)
+# d = decryption_exponent(p, q, e)
 # print(d)
 # print(alphabet_to_numbers())
-mess = message_to_numberblocks(message, number)
+# mess = message_to_numberblocks(message, number)
 # print(mess)
-c = encode(mess, e, N, number)
-print(c)
+# c = encode(mess, e, N, number)
+# print(c)
 # decoded = decode(c, N, d, number)
 # print(decoded)
-alphabet = alphabet_to_numbers()
+# alphabet = alphabet_to_numbers()
 # print(numberblocks_to_message(decoded, alphabet, number))
 # print(hashing('hi'.encode()))
