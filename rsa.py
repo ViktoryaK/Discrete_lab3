@@ -62,9 +62,6 @@ def encode(message, e, N, lenn):
     N = int(N)
     for base in message:
         c = pow(ord(base), e, N)
-        # if len(str(c)) < lenn:
-        #     add = lenn - len(str(c))
-        #     c = "0"*add + str(c)
         result.append(c)
     return result
 
@@ -73,9 +70,6 @@ def decode(c, N, d, lenn):
     N = int(N)
     for block in c:
         m = pow(int(block), d, N)
-        # if len(str(m)) < lenn:
-        #     add = lenn - len(str(m))
-        #     m = "0"*add + str(m)
         result.append(chr(m))
     return "".join(result)
 

@@ -48,9 +48,10 @@ class Server:
                     N = line[1]
                     e = line[2]
         number = rsa.div_to(N)
-        # mess = rsa.message_to_numberblocks(msg, number)
         c = rsa.encode(msg, e, N, number)
-        # if self.username_lookup[client] != self.username_lookup[client]:
+        hashed = rsa.hashing(msg)
+        client.send(hashed)
+        time.sleep(0.01)
         mess = b""
         for number in c:
             mess += number.to_bytes(8, "big")

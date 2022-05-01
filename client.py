@@ -48,8 +48,6 @@ class Client:
             message = self.s.recv(1024)
             time.sleep(0.01)
             messag = rsa.decode_message(message, self.N, self.d)
-            print(self.N)
-            print(self.d)
             hashed1 = rsa.hashing(messag)
             if not compare_digest(hashed, hashed1):
                 print("The message was damaged during the exchanging.")
@@ -57,7 +55,7 @@ class Client:
 
     def write_handler(self):
         while True:
-            print("In format name|message")
+            print("Input in format name|message")
             message = input()
             username = message.split('|')[0]
             try:
@@ -69,10 +67,8 @@ class Client:
                         if line[0] == username:
                             N = line[1]
                             e = line[2]
-                print(N)
                 time.sleep(0.1)
                 number = rsa.div_to(N)
-                # mess = rsa.message_to_numberblocks(messag, number)
                 mess = messag
                 hashed = rsa.hashing(mess)
                 self.s.send(hashed)
@@ -81,7 +77,7 @@ class Client:
                 mess = b""
                 for number in c:
                     mess += number.to_bytes(8, "big")
-                result = mess #+ "|".join(c)
+                result = mess
                 self.s.send(result)
             except IndexError:
                 print("Invalid syntax")
