@@ -3,9 +3,11 @@ import random
 from hashlib import sha256
 
 def hashing(message):
+    message = message.encode()
     sha256_digest_1 = sha256(message)
     hexdigest_1 = sha256_digest_1.hexdigest()
-    return hexdigest_1
+    result = hexdigest_1.encode()
+    return result
 
 
 def div_to(N):
@@ -54,17 +56,17 @@ def decryption_exponent(p, q, e):
     d = pow(e, -1, module)
     return d
 
-def message_to_numberblocks(message, lenn):
-    in_numbers = ''
-    dict = alphabet_to_numbers()
-    for letter in message:
-        in_numbers += dict[letter]
-    i=0
-    result = []
-    while i < len(in_numbers):
-        result.append(in_numbers[i:i+lenn])
-        i += lenn
-    return result
+# def message_to_numberblocks(message, lenn):
+#     in_numbers = ''
+#     dict = alphabet_to_numbers()
+#     for letter in message:
+#         in_numbers += dict[letter]
+#     i=0
+#     result = []
+#     while i < len(in_numbers):
+#         result.append(in_numbers[i:i+lenn])
+#         i += lenn
+#     return result
 
 
 # def alphabet_to_numbers():
@@ -147,4 +149,4 @@ primes = prime_nums_generation()
 # print(decoded)
 # alphabet = alphabet_to_numbers()
 # print(numberblocks_to_message(decoded, alphabet, number))
-# print(hashing('hi'.encode()))
+print(hashing('hi'))

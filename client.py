@@ -43,10 +43,16 @@ class Client:
 
     def read_handler(self):
         while True:
-            message = self.s.recv(1024)#.decode()
+            hashed = self.s.recv(1024)
+            time.sleep(0.1)
+            message = self.s.recv(1024)
             time.sleep(0.01)
-            # message = rsa.numberblocks_to_message(decoded, rsa.alphabet, number)
             messag = rsa.decode_message(message, self.N, self.d)
+            print(self.N)
+            print(self.d)
+            hashed1 = rsa.hashing(messag)
+            if not compare_digest(hashed, hashed1):
+                print("The message was damaged during the exchanging.")
             print(messag)
 
     def write_handler(self):
@@ -54,24 +60,31 @@ class Client:
             print("In format name|message")
             message = input()
             username = message.split('|')[0]
-            self.s.send(username.encode())
-            with open('public_keys.txt', 'r') as f:
-                for line in f:
-                    line = line.split(', ')
-                    if line[0] == username:
-                        N = line[1]
-                        e = line[2]
-            messag = message.split('|')[1]
-            time.sleep(0.1)
-            number = rsa.div_to(N)
-            # mess = rsa.message_to_numberblocks(messag, number)
-            mess = messag
-            c = rsa.encode(mess, e, N, number)
-            mess = b""
-            for number in c:
-                mess += number.to_bytes(8, "big")
-            result = mess #+ "|".join(c)
-            self.s.send(result)
+            try:
+                messag = message.split('|')[1]
+                self.s.send(username.encode())
+                with open('public_keys.txt', 'r') as f:
+                    for line in f:
+                        line = line.split(', ')
+                        if line[0] == username:
+                            N = line[1]
+                            e = line[2]
+                print(N)
+                time.sleep(0.1)
+                number = rsa.div_to(N)
+                # mess = rsa.message_to_numberblocks(messag, number)
+                mess = messag
+                hashed = rsa.hashing(mess)
+                self.s.send(hashed)
+                time.sleep(0.1)
+                c = rsa.encode(mess, e, N, number)
+                mess = b""
+                for number in c:
+                    mess += number.to_bytes(8, "big")
+                result = mess #+ "|".join(c)
+                self.s.send(result)
+            except IndexError:
+                print("Invalid syntax")
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()

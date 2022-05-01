@@ -22,8 +22,8 @@ class Server:
         self.clients = []
         self.username_lookup = []
         self.s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        # with open("public_keys.txt", "w") as file:
-        #     ...
+        with open("public_keys.txt", "w") as file:
+            ...
 
     def start(self):
         self.s.bind((self.host, self.port))
@@ -39,26 +39,6 @@ class Server:
 
             self.broadcast(f'new person has joined: {username}')
             threading.Thread(target=self.handle_client, args=(c, addr,)).start()
-
-    # def decode_message(self, client, encoded):
-    #     print("Decode message")
-    #     with open('public_keys.txt', 'r') as f:
-    #         for line in f:
-    #             line = line.split(', ')
-    #             if line[0] == client.name:
-    #                 N = int(line[1])
-    #                 e = int(line[2])
-    #                 d = int(line[3])
-    #     decoded = rsa.decode_message(encoded, N, d)
-    #     return decoded
-        # number = rsa.div_to(N)
-        # # mess = rsa.message_to_numberblocks(msg, number)
-        # c = rsa.encode(decoded, e, N, number)
-        # # if self.username_lookup[client] != self.username_lookup[client]:
-        # mess = b""
-        # for number in c:
-        #     mess += number.to_bytes(8, "big")
-        # client.send(mess)
 
     def send_to_client(self, client, msg):
         with open('public_keys.txt', 'r') as f:
@@ -85,21 +65,16 @@ class Server:
         while True:
             username = c.recv(1024).decode()
             time.sleep(0.1)
-            # username = receive.split('|')[0]
-            # messg = receive.split('|')[1:]
+            hashed = c.recv(1024)
+            time.sleep(0.1)
             receive = c.recv(1024)
-            # for client in self.username_lookup:
-            #     # if client.socket == c:
-
-                #     decoded = self.decode_message(client, receive)
-                #     # if self.username_lookup[client] == username:
-
             for client in self.username_lookup:
                 if client.socket != c:
                     if client.name == username:
-                    # if self.username_lookup[client] == username:
-                        # self.send_to_client(client, decoded)
+                        client.send(hashed)
+                        time.sleep(0.1)
                         client.send(receive)
+
 
 
 if __name__ == "__main__":
