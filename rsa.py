@@ -56,26 +56,6 @@ def decryption_exponent(p, q, e):
     d = pow(e, -1, module)
     return d
 
-# def message_to_numberblocks(message, lenn):
-#     in_numbers = ''
-#     dict = alphabet_to_numbers()
-#     for letter in message:
-#         in_numbers += dict[letter]
-#     i=0
-#     result = []
-#     while i < len(in_numbers):
-#         result.append(in_numbers[i:i+lenn])
-#         i += lenn
-#     return result
-
-
-# def alphabet_to_numbers():
-#     dict = {chr(i): str(number) for number, i in enumerate(range(32, 123))}
-#     for value in dict:
-#         if len(dict[value]) == 1:
-#             dict[value] = '0' + dict[value]
-#     return dict
-
 def encode(message, e, N, lenn):
     result = []
     e = int(e)
@@ -126,27 +106,3 @@ def numberblocks_to_message(num_message, diction, lenn):
     return result
 
 primes = prime_nums_generation()
-# p, q = generate_p_q(primes)
-# p, q = 17, 11
-# print(p, q)
-# e = encryption_exponent(p, q)
-# print(e)
-# N = p*q
-# print(N)
-
-# print(number)
-# message = 'Youre freaking right'
-# ulas = ['2015', '1114', '0003']
-# print(ulas)
-# d = decryption_exponent(p, q, e)
-# print(d)
-# print(alphabet_to_numbers())
-# mess = message_to_numberblocks(message, number)
-# print(mess)
-# c = encode(mess, e, N, number)
-# print(c)
-# decoded = decode(c, N, d, number)
-# print(decoded)
-# alphabet = alphabet_to_numbers()
-# print(numberblocks_to_message(decoded, alphabet, number))
-print(hashing('hi'))
